@@ -10,7 +10,7 @@ class ProfilePage(tk.Frame):
         search_frame = tk.Frame(self)
         search_frame.pack(fill="x", padx=10, pady=6)
 
-        tk.Label(search_frame, text="Search:", font=("Arial", 12)).pack(side="left")
+        tk.Label(search_frame, text="Search").pack(side="left")
         self.search_var = tk.StringVar()
         entry = tk.Entry(search_frame, textvariable=self.search_var, width=40)
         entry.pack(side="left", padx=10)
@@ -80,11 +80,7 @@ class ProfilePage(tk.Frame):
             self.table.delete(row)
 
         if self.current_user:
-            all_borrows = db.borrowed_by_user(self.current_user[0])
-            self.borrowed_rows = [r for r in all_borrows if r[7] is None]
             self.favorites_rows = db.favorites_by_user(self.current_user[0])
-            for row in self.borrowed_rows:
-                self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
             for row in self.favorites_rows:
                 self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
         else:
@@ -115,9 +111,9 @@ class ProfilePage(tk.Frame):
 
         btnf = tk.Frame(top)
         btnf.pack(fill="x", pady=4)
-        tk.Button(btnf, text="Details", command=lambda: self._bb_details(tree)).pack(side="left", padx=6)
-        tk.Button(btnf, text="Due date", command=lambda: self._bb_due(tree)).pack(side="left", padx=6)
-        tk.Button(btnf, text="Return", command=lambda: self._bb_return(tree)).pack(side="left", padx=6)
+        ttk.Button(btnf, text="Details", command=lambda: self._bb_details(tree)).grid(row=0, column=0, padx=6)
+        ttk.Button(btnf, text="Due date", command=lambda: self._bb_due(tree)).grid(row=0, column=1, padx=6)
+        ttk.Button(btnf, text="Return", command=lambda: self._bb_return(tree)).grid(row=0, column=2, padx=6)
 
         rows = db.borrowed_by_user(self.current_user[0])
         for r in rows:

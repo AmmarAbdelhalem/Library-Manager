@@ -122,6 +122,14 @@ def books_all() -> List[Tuple]:
     conn.close()
     return rows
 
+def add_book(title: str, author: str, year: int, category: str, description: str = "") -> int:
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO books (title, author, year, category, description) VALUES (?, ?, ?, ?, ?)", (title, author, year, category, description))
+    conn.commit()
+    bid = cur.lastrowid
+    conn.close()
+    return bid
 
 def books_search(query: str) -> List[Tuple]:
     like = f"%{query}%"

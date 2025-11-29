@@ -1,12 +1,12 @@
+from Data.books import books as SEED_BOOKS
 from Pages.dashboard import DashboardPage
 from Pages.settings import SettingsPage
 from Pages.library import LibraryPage
 from Pages.profile import ProfilePage
 from Pages.auth import AuthPage
-from Data import db
-from Data.books import books as SEED_BOOKS
 from tkinter import ttk
 import tkinter as tk
+from Data import db
 
 class App(tk.Frame):
     def __init__(self, master, current_user=None, on_logout=None):

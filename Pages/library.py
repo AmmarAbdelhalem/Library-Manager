@@ -14,6 +14,7 @@ class LibraryPage(tk.Frame):
         tk.Label(search_frame, text="Search").pack(side="left")
         self.search_var = tk.StringVar()
         entry = tk.Entry(search_frame, textvariable=self.search_var, width=40)
+        ttk.Button(search_frame, text="Add books", command=self.add_books).pack(side="right")
         entry.pack(side="left", padx=10)
         entry.bind("<KeyRelease>", self.search_books)
 
@@ -36,8 +37,8 @@ class LibraryPage(tk.Frame):
 
         ttk.Button(btn_frame, text="Details", width=12, command=self.details).grid(row=0, column=0, padx=10)
         ttk.Button(btn_frame, text="Borrow", width=12, command=self.borrow).grid(row=0, column=1, padx=10)
-        ttk.Button(btn_frame, text="Delete", width=12, command=self.delete).grid(row=0, column=3, padx=10)
         ttk.Button(btn_frame, text="Favorite", width=12, command=self.favorite).grid(row=0, column=2, padx=10)
+        ttk.Button(btn_frame, text="Delete", width=12, command=self.delete).grid(row=0, column=3, padx=10)
 
         self.refresh_books()
 
@@ -55,6 +56,17 @@ class LibraryPage(tk.Frame):
         rows = db.books_search(query) if query else db.books_all()
         for row in rows:
             self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+            
+    def add_books(self):
+        bookName = simpledialog.askstring("Add Book", "Enter book name:", parent=self)
+        authorName = simpledialog.askstring("Add Book", "Enter author name:", parent=self)
+        year = simpledialog.askinteger("Add Book", "Enter publication year:", parent=self)
+        category = simpledialog.askstring("Add Book", "Enter book category:", parent=self)
+        description = simpledialog.askstring("Add Book", "Enter book description (optional):", parent=self)
+        if bookName and authorName and year and category and description is not None:
+            db.add_book(bookName, authorName, year, category, description)
+            messagebox.showinfo("Success", f"Book '{bookName}' added successfully.")
+            self.refresh_books()
 
     def details(self):
         selected = self.table.focus()
