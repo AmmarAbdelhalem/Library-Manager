@@ -58,15 +58,25 @@ class LibraryPage(tk.Frame):
             self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
             
     def add_books(self):
-        bookName = simpledialog.askstring("Add Book", "Enter book name:", parent=self)
-        authorName = simpledialog.askstring("Add Book", "Enter author name:", parent=self)
-        year = simpledialog.askinteger("Add Book", "Enter publication year:", parent=self)
+        title = simpledialog.askstring("Add Book", "Enter book title:", parent=self)
+        if not title:
+            return
+
+        author = simpledialog.askstring("Add Book", "Enter book author:", parent=self)
+        if not author:
+            return
+
+        year = simpledialog.askinteger("Add Book", "Enter publication year:", parent=self, minvalue=0, maxvalue=2100)
+        if year is None:
+            return
+
         category = simpledialog.askstring("Add Book", "Enter book category:", parent=self)
-        description = simpledialog.askstring("Add Book", "Enter book description (optional):", parent=self)
-        if bookName and authorName and year and category and description is not None:
-            db.add_book(bookName, authorName, year, category, description)
-            messagebox.showinfo("Success", f"Book '{bookName}' added successfully.")
-            self.refresh_books()
+        if not category:
+            return
+
+        db.book_add(title, author, year, category)
+        messagebox.showinfo("Book Added", f"'{title}' by {author} added to library.")
+        self.refresh_books()
 
     def details(self):
         selected = self.table.focus()
