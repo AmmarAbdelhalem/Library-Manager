@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 class SettingsPage(tk.Frame):
     def __init__(self, parent, on_logout=None):
         super().__init__(parent)

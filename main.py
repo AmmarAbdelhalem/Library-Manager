@@ -8,6 +8,7 @@ from tkinter import ttk
 import tkinter as tk
 from Data import db
 
+
 class App(tk.Frame):
     def __init__(self, master, current_user=None, on_logout=None):
         super().__init__(master)
@@ -34,6 +35,7 @@ class App(tk.Frame):
     def _handle_logout(self):
         if self._on_logout:
             self._on_logout()
+
 
 def _start_main_app(root, uid, username):
     for widget in root.winfo_children():

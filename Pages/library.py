@@ -2,6 +2,7 @@ from tkinter import ttk, messagebox, simpledialog
 from Data import db
 import tkinter as tk
 
+
 class LibraryPage(tk.Frame):
     def __init__(self, parent, current_user=None):
         super().__init__(parent)
@@ -14,7 +15,9 @@ class LibraryPage(tk.Frame):
         tk.Label(search_frame, text="Search").pack(side="left")
         self.search_var = tk.StringVar()
         entry = tk.Entry(search_frame, textvariable=self.search_var, width=40)
-        ttk.Button(search_frame, text="Add books", command=self.add_books).pack(side="right")
+        ttk.Button(search_frame, text="Add books", command=self.add_books).pack(
+            side="right"
+        )
         entry.pack(side="left", padx=10)
         entry.bind("<KeyRelease>", self.search_books)
 
@@ -35,10 +38,18 @@ class LibraryPage(tk.Frame):
         btn_frame = tk.Frame(self)
         btn_frame.pack(pady=10)
 
-        ttk.Button(btn_frame, text="Details", width=12, command=self.details).grid(row=0, column=0, padx=10)
-        ttk.Button(btn_frame, text="Borrow", width=12, command=self.borrow).grid(row=0, column=1, padx=10)
-        ttk.Button(btn_frame, text="Favorite", width=12, command=self.favorite).grid(row=0, column=2, padx=10)
-        ttk.Button(btn_frame, text="Delete", width=12, command=self.delete).grid(row=0, column=3, padx=10)
+        ttk.Button(btn_frame, text="Details", width=12, command=self.details).grid(
+            row=0, column=0, padx=10
+        )
+        ttk.Button(btn_frame, text="Borrow", width=12, command=self.borrow).grid(
+            row=0, column=1, padx=10
+        )
+        ttk.Button(btn_frame, text="Favorite", width=12, command=self.favorite).grid(
+            row=0, column=2, padx=10
+        )
+        ttk.Button(btn_frame, text="Delete", width=12, command=self.delete).grid(
+            row=0, column=3, padx=10
+        )
 
         self.refresh_books()
 
@@ -55,8 +66,10 @@ class LibraryPage(tk.Frame):
 
         rows = db.books_search(query) if query else db.books_all()
         for row in rows:
-            self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
-            
+            self.table.insert(
+                "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+            )
+
     def add_books(self):
         title = simpledialog.askstring("Add Book", "Enter book title:", parent=self)
         if not title:
@@ -66,11 +79,19 @@ class LibraryPage(tk.Frame):
         if not author:
             return
 
-        year = simpledialog.askinteger("Add Book", "Enter publication year:", parent=self, minvalue=0, maxvalue=2100)
+        year = simpledialog.askinteger(
+            "Add Book",
+            "Enter publication year:",
+            parent=self,
+            minvalue=0,
+            maxvalue=2100,
+        )
         if year is None:
             return
 
-        category = simpledialog.askstring("Add Book", "Enter book category:", parent=self)
+        category = simpledialog.askstring(
+            "Add Book", "Enter book category:", parent=self
+        )
         if not category:
             return
 
@@ -88,7 +109,7 @@ class LibraryPage(tk.Frame):
 
         messagebox.showinfo(
             "Book Details",
-            f"Title: {data[1]}\nAuthor: {data[2]}\nYear: {data[3]}\nCategory: {data[4]}"
+            f"Title: {data[1]}\nAuthor: {data[2]}\nYear: {data[3]}\nCategory: {data[4]}",
         )
 
     def borrow(self):
@@ -103,7 +124,13 @@ class LibraryPage(tk.Frame):
         values = self.table.item(selected, "values")
         book_id = values[0]
 
-        days = simpledialog.askinteger("Borrow days", "How many days would you like to borrow this book for?", parent=self, minvalue=1, initialvalue=14)
+        days = simpledialog.askinteger(
+            "Borrow days",
+            "How many days would you like to borrow this book for?",
+            parent=self,
+            minvalue=1,
+            initialvalue=14,
+        )
         if days is None:
             return
 
@@ -122,7 +149,9 @@ class LibraryPage(tk.Frame):
             return
         values = self.table.item(selected, "values")
         if not values or len(values) < 2:
-            messagebox.showwarning("Invalid selection", "Could not read selected book information.")
+            messagebox.showwarning(
+                "Invalid selection", "Could not read selected book information."
+            )
             return
 
         book_id = values[0]
@@ -156,7 +185,9 @@ class LibraryPage(tk.Frame):
         book_id = values[0]
         title = values[1]
 
-        ok_delete = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete '{title}'?")
+        ok_delete = messagebox.askyesno(
+            "Confirm Delete", f"Are you sure you want to delete '{title}'?"
+        )
         if not ok_delete:
             return
 
@@ -172,4 +203,6 @@ class LibraryPage(tk.Frame):
             self.table.delete(row)
         rows = db.books_all()
         for row in rows:
-            self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+            self.table.insert(
+                "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+            )

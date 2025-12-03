@@ -3,6 +3,7 @@ import tkinter as tk
 from datetime import datetime
 from Data import db
 
+
 class ProfilePage(tk.Frame):
     def __init__(self, parent, current_user=None):
         super().__init__(parent)
@@ -33,9 +34,18 @@ class ProfilePage(tk.Frame):
         btn_frame = tk.Frame(self)
         btn_frame.pack(pady=10)
 
-        ttk.Button(btn_frame, text="Details", width=12, command=self.details).grid(row=0, column=0, padx=10)
-        ttk.Button(btn_frame, text="Borrowed books", width=15, command=self.open_borrowed_window).grid(row=0, column=1, padx=10)
-        ttk.Button(btn_frame, text="Unfavorite", width=12, command=self.unfavorite).grid(row=0, column=2, padx=10)
+        ttk.Button(btn_frame, text="Details", width=12, command=self.details).grid(
+            row=0, column=0, padx=10
+        )
+        ttk.Button(
+            btn_frame,
+            text="Borrowed books",
+            width=15,
+            command=self.open_borrowed_window,
+        ).grid(row=0, column=1, padx=10)
+        ttk.Button(
+            btn_frame, text="Unfavorite", width=12, command=self.unfavorite
+        ).grid(row=0, column=2, padx=10)
 
         self.current_user = current_user
         self.borrowed_rows = []
@@ -54,13 +64,19 @@ class ProfilePage(tk.Frame):
 
         if self.current_user:
             all_rows = self.borrowed_rows + self.favorites_rows
-            rows = [r for r in all_rows if any(query in str(field).lower() for field in r)]
+            rows = [
+                r for r in all_rows if any(query in str(field).lower() for field in r)
+            ]
             for row in rows:
-                self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+                self.table.insert(
+                    "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+                )
         else:
             rows = db.books_search(query) if query else db.books_all()
             for row in rows:
-                self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+                self.table.insert(
+                    "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+                )
 
     def details(self):
         selected = self.table.focus()
@@ -72,7 +88,7 @@ class ProfilePage(tk.Frame):
 
         messagebox.showinfo(
             "Book Details",
-            f"Title: {data[1]}\nAuthor: {data[2]}\nYear: {data[3]}\nCategory: {data[4]}"
+            f"Title: {data[1]}\nAuthor: {data[2]}\nYear: {data[3]}\nCategory: {data[4]}",
         )
 
     def refresh_books(self):
@@ -82,11 +98,15 @@ class ProfilePage(tk.Frame):
         if self.current_user:
             self.favorites_rows = db.favorites_by_user(self.current_user[0])
             for row in self.favorites_rows:
-                self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+                self.table.insert(
+                    "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+                )
         else:
             rows = db.books_all()
             for row in rows:
-                self.table.insert("", "end", values=(row[0], row[1], row[2], row[3], row[4]))
+                self.table.insert(
+                    "", "end", values=(row[0], row[1], row[2], row[3], row[4])
+                )
 
     def open_borrowed_window(self):
         if not self.current_user:
@@ -111,14 +131,22 @@ class ProfilePage(tk.Frame):
 
         btnf = tk.Frame(top)
         btnf.pack(fill="x", pady=4)
-        ttk.Button(btnf, text="Details", command=lambda: self._bb_details(tree)).grid(row=0, column=0, padx=6)
-        ttk.Button(btnf, text="Due date", command=lambda: self._bb_due(tree)).grid(row=0, column=1, padx=6)
-        ttk.Button(btnf, text="Return", command=lambda: self._bb_return(tree)).grid(row=0, column=2, padx=6)
+        ttk.Button(btnf, text="Details", command=lambda: self._bb_details(tree)).grid(
+            row=0, column=0, padx=6
+        )
+        ttk.Button(btnf, text="Due date", command=lambda: self._bb_due(tree)).grid(
+            row=0, column=1, padx=6
+        )
+        ttk.Button(btnf, text="Return", command=lambda: self._bb_return(tree)).grid(
+            row=0, column=2, padx=6
+        )
 
         rows = db.borrowed_by_user(self.current_user[0])
         for r in rows:
             if r[7] is None:
-                tree.insert("", "end", values=(r[0], r[1], r[2], r[3], r[4], r[5], r[6]))
+                tree.insert(
+                    "", "end", values=(r[0], r[1], r[2], r[3], r[4], r[5], r[6])
+                )
 
         top.transient(self)
         top.grab_set()
@@ -129,7 +157,10 @@ class ProfilePage(tk.Frame):
             messagebox.showwarning("Select", "Select a borrowed book first.")
             return
         v = tree.item(sel, "values")
-        messagebox.showinfo("Details", f"Title: {v[1]}\nAuthor: {v[2]}\nYear: {v[3]}\nCategory: {v[4]}\nBorrowed at: {v[5]}")
+        messagebox.showinfo(
+            "Details",
+            f"Title: {v[1]}\nAuthor: {v[2]}\nYear: {v[3]}\nCategory: {v[4]}\nBorrowed at: {v[5]}",
+        )
 
     def _bb_due(self, tree):
         sel = tree.focus()
@@ -193,7 +224,9 @@ class ProfilePage(tk.Frame):
         ok = db.favorites_remove(self.current_user[0], book_id)
         if ok:
             self.table.delete(selected)
-            messagebox.showinfo("Removed", f"'{title}' was removed from your favorites.")
+            messagebox.showinfo(
+                "Removed", f"'{title}' was removed from your favorites."
+            )
             self.refresh_books()
         else:
             messagebox.showwarning("Not found", "This book is not in your favorites.")
