@@ -95,7 +95,7 @@ class LibraryPage(tk.Frame):
         if not category:
             return
 
-        db.book_add(title, author, year, category)
+        db.add_book(title, author, year, category)
         messagebox.showinfo("Book Added", f"'{title}' by {author} added to library.")
         self.refresh_books()
 

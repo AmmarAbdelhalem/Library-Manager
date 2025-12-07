@@ -17,5 +17,5 @@ class DashboardPage(tk.Frame):
             welcome_text = "Welcome to your Library"
 
         tk.Label(
-            center_frame, text=welcome_text, font=("Arial", 42, "bold"), fg="#333333"
+            center_frame, text=welcome_text, font=("Arial", 30, "bold"), fg="#333333"
         ).pack(pady=40)
